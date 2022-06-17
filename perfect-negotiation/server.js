@@ -9,9 +9,16 @@ app.use(express.static('public'))
 const peers = new Set()
 
 io.on('connection', (socket) => {
-  peers.add(socket.id)
+  if (!peers.size) {
+    socket.emit('init')
+  }
 
-  socket.on('pre-offer', (data) => {})
+  peers.add(socket.id)
+  
+
+  socket.on('message', (data) => {
+    socket.broadcast.emit('message', data)
+  })
 
   socket.on('disconnect', () => {
     peers.delete(socket.id)
