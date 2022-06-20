@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Realtime communication with WebRTC</title>
+
+  <link rel="stylesheet" href="main.css" />
+
+</head>
+
+<body>
+
+  <h1>Realtime communication with WebRTC</h1>
+
+  <div class="videos">
+    <video class="selfview" autoplay playsinline muted></video>
+    <video class="remoteview" autoplay playsinline></video>
+  </div>
+
+  <div class="buttons">
+    <button class="start">Start</button>
+    <button class="call">Call</button>
+    <button class="hangup">Hang Up</button>
+  </div>
+
+  <div class="chat">
+    <ul class="messages"></ul>
+    <input class="message" type="text" placeholder="Enter your message" />
+  </div>
+
+  <script src="https://webrtchacks.github.io/adapter/adapter-latest.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="signaling-channel.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>

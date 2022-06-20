@@ -1,0 +1,49 @@
+* {
+  box-sizing: border-box;
+}
+
+.videos {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 1rem;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  max-width: 320px;
+  border: 1px solid #d9d9d9;
+}
+
+.buttons {
+  margin-top: 1rem;
+}
+
+button {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background-color: #c3c3c3;
+  border: none;
+  cursor: pointer;
+}
+
+.chat {
+  margin-top: 1rem;
+}
+
+.messages {
+  display: grid;
+  grid-gap: 1rem;
+  max-width: 480px;
+  padding: 1rem;
+  border: 1px solid #d9d9d9;
+  list-style-type: none;
+}
+
+.message {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  outline: none;
+}
