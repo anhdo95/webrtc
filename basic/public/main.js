@@ -7,8 +7,12 @@ const startButton = document.querySelector('button.start')
 const callButton = document.querySelector('button.call')
 const hangUpButton = document.querySelector('button.hangup')
 
+const messages = document.querySelector('ul.messages')
+const message = document.querySelector('input.message')
+
 callButton.disabled = true
 hangUpButton.disabled = true
+message.disabled = true
 
 const mediaConstraints = {
   video: {
@@ -19,17 +23,20 @@ const mediaConstraints = {
   audio: true,
 }
 
-let localStream, remoteStream, peerConnection, signaler
+let localStream, remoteStream, peerConnection, dataChannel, signaler
 
 startButton.onclick = start
 callButton.onclick = call
 hangUpButton.onclick = hangUp
+
+message.onkeyup = sendMessage
 
 async function start() {
   try {
     localStream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
     createSignalingChannel()
     createPeerConnection()
+    createDataChannel()
     addTrack()
     selfview.srcObject = localStream
 
@@ -42,7 +49,7 @@ async function start() {
 
 function createSignalingChannel() {
   signaler = new SignalingChannel()
-  
+
   signaler.onmessage = handleMessage
 }
 
@@ -66,6 +73,7 @@ async function createPeerConnection() {
   peerConnection.ontrack = handleTrack
   peerConnection.onicecandidate = handleIceCandidate
   peerConnection.oniceconnectionstatechange = handleIceConnectionStateChange
+  peerConnection.ondatachannel = handleDataChannel
 }
 
 function handleTrack({ track, streams }) {
@@ -74,7 +82,7 @@ function handleTrack({ track, streams }) {
     if (remoteview.srcObject) return
     remoteStream = streams[0]
     remoteview.srcObject = remoteStream
-    
+
     callButton.disabled = true
     hangUpButton.disabled = false
   }
@@ -94,6 +102,44 @@ function handleIceConnectionStateChange({ target: { connectionState } }) {
   console.log('handleIceConnectionStateChange', connectionState)
 }
 
+function handleDataChannel({ channel }) {
+  console.log('handleDataChannel', channel)
+  channel.onopen = handleChannelOpen
+  channel.onclose = handleChannelClose
+  channel.onmessage = handleChannelMessage
+}
+
+function createDataChannel() {
+  dataChannel = peerConnection.createDataChannel('chat')
+
+  dataChannel.onopen = handleChannelOpen
+  dataChannel.onclose = handleChannelClose
+  dataChannel.onmessage = handleChannelMessage
+}
+
+function handleChannelOpen({ target: { readyState } }) {
+  console.log('handleChannelOpen')
+  if (readyState === 'open') {
+    message.disabled = false
+  }
+}
+
+function handleChannelClose() {
+  console.log('handleChannelClose')
+  message.disabled = true
+}
+
+function handleChannelMessage({ data }) {
+  console.log('handleChannelMessage :>> ', data)
+  appendMessage(data)
+}
+
+function appendMessage(text) {
+  const message = document.createElement('li')
+  message.textContent = text
+  messages.appendChild(message)
+}
+
 function addTrack() {
   localStream
     .getTracks()
@@ -110,13 +156,8 @@ async function call() {
 function hangUp() {
   peerConnection.close()
 
-  localStream.getTracks().forEach(track => {
-    track.stop()
-  })
-
-  remoteStream.getTracks().forEach(track => {
-    track.stop()
-  })
+  localStream.getTracks().forEach((track) => track.stop())
+  remoteStream.getTracks().forEach((track) => track.stop())
 
   peerConnection = null
   localStream = null
@@ -125,4 +166,13 @@ function hangUp() {
   startButton.disabled = false
   callButton.disabled = true
   hangUpButton.disabled = true
+}
+
+function sendMessage({ keyCode }) {
+  if (keyCode === 13 && message.value) {
+    // Pressed an enter and has entered a message
+    appendMessage(message.value)
+    dataChannel.send(message.value)
+    message.value = '' // clear the message
+  }
 }
