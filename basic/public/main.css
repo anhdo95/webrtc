@@ -1,4 +1,22 @@
+.videos {
+  display: flex;
+}
+
 video {
   width: 100%;
   max-width: 320px;
+  border: 1px solid #d9d9d9;
+  margin: 0 0.5rem;
+}
+
+.buttons {
+  margin-top: 1rem;
+}
+
+button {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  background-color: #c3c3c3;
+  border: none;
+  cursor: pointer;
 }

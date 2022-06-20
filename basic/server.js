@@ -9,7 +9,15 @@ app.use(express.static('public'))
 const peers = new Set()
 
 io.on('connection', (socket) => {
+  peers.add(socket.id)
   
+  socket.on('message', (data) => {
+    socket.broadcast.emit('message', data)
+  })
+
+  socket.on('disconnect', () => {
+    peers.delete(socket.id)
+  })
 })
 
 app.get('/', (req, res) => {
