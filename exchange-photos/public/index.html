@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Realtime communication with WebRTC</title>
+
+  <link rel="stylesheet" href="main.css" />
+
+</head>
+
+<body>
+
+  <h1>Realtime communication with WebRTC</h1>
+
+  <div class="videos">
+    <video class="selfView" autoplay playsinline muted></video>
+  </div>
+
+  <div class="snapAndSend">
+    <button class="snap">Snap</button>
+    <button class="send">Send</button>
+  </div>
+
+  <div class="photos">
+    <canvas class="selfPhoto"></canvas>
+    <canvas class="remotePhoto"></canvas>
+  </div>
+
+  <script src="https://webrtchacks.github.io/adapter/adapter-latest.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="signaling-channel.js"></script>
+  <script src="main.js"></script>
+
+</body>
+
+</html>
