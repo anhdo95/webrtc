@@ -1,0 +1,30 @@
+* {
+  box-sizing: border-box;
+}
+
+.videos, .photos {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  grid-gap: 1rem;
+  margin-top: 1rem;
+}
+
+video, canvas {
+  width: 100%;
+  height: 100%;
+  max-width: 320px;
+  border: 1px solid #d9d9d9;
+}
+
+button {
+  display: inline-block;
+  min-width: 100px;
+  padding: 0.5rem 1.25rem;
+  background-color: #c3c3c3;
+  border: none;
+  cursor: pointer;
+}
+
+.snapAndSend {
+  margin-top: 1rem;
+}
